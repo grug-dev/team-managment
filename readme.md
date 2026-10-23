@@ -1,76 +1,80 @@
 # Team Managment
 
-This project was built to solve the following problem:
+[![CI](https://github.com/grug-dev/team-managment/actions/workflows/ci.yml/badge.svg)](https://github.com/grug-dev/team-managment/actions/workflows/ci.yml)
+
+This project solves the following problem:
 
 ```
 In a team of n people, a celebrity is known by everyone but he/she doesn't know anybody.
 ```
 
-## Pre-requisites
+## Prerequisites
 
-The solution was built with Java JDK 8 and Spring Boot 2.0.4.RELEASE. In order to run the solution is necessary to verify in the system:
+The solution uses Java JDK 8 and Spring Boot 2.0.4.RELEASE. Check your system:
 
+* `JAVA_HOME` points to a Java 8 installation. Check it with `java -version`.
+* Maven is installed. Check it with `mvn -version`.
 
-* The JAVA HOME environment variable should be set to a Java 8 installation. The version can be verified executing the next command ```java –version```
-* Maven have to be installed in the system. To verify it, you can run the command ```mvn –version```
+## Application Layers
 
+![Application layers](doc/application_layer.png)
 
-## Application Layer
-
-![Can't load](doc/application_layer.png)
-
-## Responsabilities
-
-### Business/Service Layer
+## Responsibilities
 
 #### TeamResource
 
-RestFul web service who exposes a resource to upload a file. It will process a file with the test cases of the problem and it will response a JSON object with the results of the test cases received. 
+REST controller. It receives the uploaded file with the test cases and returns a JSON object
+with the result of each test case. It only handles HTTP.
 
-This resource will invoke to TeamMemberFinderService service in order to find the celebrity of a team.
+#### TestCasesFileParser
+
+Reads the uploaded file and builds the test cases. It returns a `400 Bad Request` with a clear
+message when the file has a bad format.
 
 #### CelebrityFinderServiceImpl
 
-It's implementation class for an interface called TeamMemberFinderService, has the logic to find a celebrity of a team given.
+Implements `TeamMemberFinderService`. It finds the celebrity of a team: the member who knows
+nobody and is known by every other member.
 
 ###### **Request Info**
 
-+ **Http Method:** POST
-+ **URI:**  ````/v1/teams/upload/filterByCelebrity````
-+ **Content-Type:** text/plain
-+ **Headers:**  multipart/form-data
-+ **Request PayLoad:**  Content-Type: text/plain
++ **HTTP Method:** POST
++ **URI:** `/v1/teams/upload/filterByCelebrity`
++ **Content-Type:** `multipart/form-data`
++ **Form field:** `file` (a plain text file)
 
-## How Can I Test it?
+## How Can I Test It?
 
-You need to upload a file with the test cases. This file will contain the data of the members of a team. The input format will explain what it means.
+Upload a file with the test cases. The file has the members of each team. The input format
+explains it.
 
-### Input Format 
+### Input Format
 
-The first line contains an integer T, the number of test-cases. T testcases follow. 
+The first line contains an integer T, the number of test cases. T test cases follow.
 
-For each test case, the first line will contain two integers N and M separated by a single space. N defines the team ID and M defines the number of the members of the team. Each test cases corresponds to a team concept.
+Each test case starts with a line with two integers N and M, separated by a space. N is the
+team ID and M is the number of members of the team.
 
 ```
 1 5  [ [N,M] = Team Id, members of the Team ]
 ```
 
-The next M lines will contain separated by a single space:
+The next M lines contain, separated by a space:
 
 ```
-[J, K...] = Member Id, Members known by A
+[J, K...] = Member Id, Ids of the members that J knows
 ```
 
-### Output Format 
+### Output Format
 
-The service will response a JSON document with the result of each test case. 
+The service returns a JSON document with the result of each test case.
 
 ### Sample Input
 
 ```
 2
 1 5
-1 
+1
 2 1 3
 3 1 4
 4 1 2
@@ -84,7 +88,6 @@ The service will response a JSON document with the result of each test case.
 ### Sample Output
 
 ```json
-
 {
   "testCase": [
     {
@@ -103,44 +106,40 @@ The service will response a JSON document with the result of each test case.
 
 ### Explanation
 
-There are two test cases. The first with team number one, have five members, the second one with team ID two, have 3 members.
+There are two test cases. The first team (ID 1) has five members. The second team (ID 2) has
+three members.
 
-In the first team, the member 1 doesn't have a known. (celebrity). The others members knows to the member 1 and other members. The celebrity found is the member 1 of the team.
+In the first team, member 1 knows nobody, and all the other members know member 1. Member 1 is
+the celebrity.
 
-In the second team, all members known a member with ID 1. There isn't a celebrity.
+In the second team, all members know member 1, but member 1 also knows himself. There is no
+celebrity.
 
-## Running the solution
+## Running the Solution
 
-locate in the root folder of the project and run the following commands: 
+Go to the root folder of the project and run:
 
 ```
-mvn compile
 mvn spring-boot:run
 ```
 
-Open your browser and copy the next URL:
+Run the tests with:
 
 ```
-http://localhost:8585/swagger-ui.html
+mvn test
 ```
 
 ## Uploading a Test File
 
-
-The port defined for the server is 8585.
-
-
-The documentation of the rest service is exposed using Swagger UI.
+The server port is 8585. The REST documentation uses Swagger UI. Open this URL in your browser:
 
 ```
 http://localhost:8585/swagger-ui.html
 ```
 
-Then, we need to find the resource ```POST /v1/teams/upload/filterByCelebrity``` in order to upload the file with the test cases.
+Find the resource `POST /v1/teams/upload/filterByCelebrity` and upload the file with the test
+cases.
 
-![Can't load](doc/uploadfile_swagger.png)
-
-Then, try it out!
-
+![Upload file in Swagger](doc/uploadfile_swagger.png)
 
 [Data Test Cases Example](doc/data.txt)
