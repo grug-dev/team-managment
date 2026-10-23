@@ -3,26 +3,20 @@ package com.vividseats.teamanagment.dto;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
 public class MemberDTO {
 
   private Long id;
-  @JsonIgnore
-  private TeamDTO team;
-  @JsonIgnore
-  private Set<MemberDTO> knows = new HashSet<>();
   private Set<Long> peopleKnown = new HashSet<>();
 
   public MemberDTO() {
 
   }
 
-  public MemberDTO(Long memberId, TeamDTO team, Set<Long> membersKnown) {
+  public MemberDTO(Long memberId, Set<Long> membersKnown) {
     this.id = memberId;
-    this.team = team;
     this.peopleKnown = membersKnown;
   }
 

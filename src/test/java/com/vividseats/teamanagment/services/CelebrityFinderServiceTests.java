@@ -27,7 +27,7 @@ public class CelebrityFinderServiceTests {
     for (long knownId : peopleKnown) {
       known.add(knownId);
     }
-    return new MemberDTO(id, null, known);
+    return new MemberDTO(id, known);
   }
 
   private TeamDTO team(MemberDTO... members) {
