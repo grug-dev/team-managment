@@ -3,14 +3,10 @@ package com.vividseats.teamanagment.dto;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
-@Component
-@Scope("prototype")
 public class MemberDTO {
 
   private Long id;
