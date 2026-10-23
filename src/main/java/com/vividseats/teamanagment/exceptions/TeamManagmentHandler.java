@@ -19,7 +19,8 @@ public class TeamManagmentHandler {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
   }
 
-  @ExceptionHandler(value = {MemberCreatedException.class, FilterCelebrityUploadException.class})
+  @ExceptionHandler(value = {MemberCreatedException.class, FilterCelebrityUploadException.class,
+      TestCasesFileNotFoundException.class})
   public ResponseEntity<Object> handleCreationMember(Exception ex, WebRequest request) {
     ExceptionResponse exceptionResponse = new ExceptionResponse();
     exceptionResponse.setDate(LocalDate.now());
